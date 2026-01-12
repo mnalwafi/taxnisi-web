@@ -50,7 +50,7 @@ export default function CaseStudyGrid({ projects }: { projects: CaseStudy[] }) {
       </div>
 
       {/* FILTER BAR */}
-      <div className="max-w-7xl mx-auto mb-16 flex flex-wrap gap-4 sticky top-32 z-40 mix-blend-mode-multiply">
+      <div className="max-w-7xl mx-auto mb-16 flex flex-wrap gap-4 mix-blend-mode-multiply">
         {sectors.map((sector) => (
           <button
             key={sector}

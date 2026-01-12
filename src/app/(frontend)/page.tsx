@@ -1,59 +1,37 @@
-import { headers as getHeaders } from 'next/headers.js'
-import Image from 'next/image'
 import { getPayload } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
-
 import config from '@/payload.config'
-import './styles.css'
+import LandingPage from '@/components/LandingPage'
+import React from 'react'
 
-export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
+export const dynamic = 'force-dynamic'
 
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+export default async function Page() {
+  const payload = await getPayload({ config })
 
-  return (
-    <div className="home">
-      <div className="content">
-        <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg" />
-          <Image
-            alt="Payload Logo"
-            height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
-          />
-        </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
-        <div className="links">
-          <a
-            className="admin"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-          <a
-            className="docs"
-            href="https://payloadcms.com/docs"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Documentation
-          </a>
-        </div>
-      </div>
-      <div className="footer">
-        <p>Update this page by editing</p>
-        <a className="codeLink" href={fileURL}>
-          <code>app/(frontend)/page.tsx</code>
-        </a>
-      </div>
-    </div>
-  )
+  // 1. Fetch Clients
+  const { docs: clients } = await payload.find({
+    collection: 'clients',
+    limit: 10,
+  })
+
+  // 2. Fetch Stats
+  const stats = await payload.findGlobal({
+    slug: 'statistics',
+  })
+
+  // 3. FETCH CASE STUDIES (New)
+  const { docs: projects } = await payload.find({
+    collection: 'case-studies',
+    limit: 4, // Show top 4 projects
+    sort: '-createdAt',
+  })
+
+  const { docs: services } = await payload.find({
+    collection: 'services',
+    sort: 'createdAt',
+    limit: 6, // Limit to top 6 for homepage
+  })
+
+  // Pass 'projects' to the frontend component
+  return <LandingPage clients={clients} stats={stats} projects={projects} services={services} />
 }

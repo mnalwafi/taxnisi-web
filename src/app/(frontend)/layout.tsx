@@ -1,20 +1,34 @@
-import React from 'react'
+import type { Metadata } from 'next'
+import { Instrument_Serif, Outfit } from 'next/font/google' // <--- CHANGE THIS
 import './styles.css'
 import SmoothScroll from '@/components/SmoothScroll'
+import Header from '@/components/Header'
 
-export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+const instrument = Instrument_Serif({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-instrument',
+})
+
+// "Outfit" is the best free alternative to Product Sans
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit', // <--- RENAME VARIABLE
+})
+
+export const metadata: Metadata = {
+  title: 'Taxnisi - Strategic Tax Consulting',
+  description: 'Advanced tax optimization for modern enterprises.',
 }
 
-export default async function RootLayout(props: { children: React.ReactNode }) {
-  const { children } = props
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
+    // Update variable name here
+    <html lang="en" className={`${instrument.variable} ${outfit.variable}`}>
+      <body className="font-sans antialiased bg-white text-black selection:bg-black selection:text-white">
         <SmoothScroll />
-        <main>{children}</main>
+        <Header />
+        {children}
       </body>
     </html>
   )

@@ -1,164 +1,83 @@
-:root {
-  --font-mono: 'Roboto Mono', monospace;
-}
+@import 'tailwindcss';
 
-* {
-  box-sizing: border-box;
-}
+/* Taxnisi Custom Theme Variables (CSS Variables)
+   In v4, we just use standard CSS variables for theming! 
+*/
+@theme {
+  --font-serif: var(--font-instrument), serif;
+  --font-sans: var(--font-outfit), sans-serif; /* <--- UPDATE THIS */
 
-html {
-  font-size: 18px;
-  line-height: 32px;
+  --color-taxnisi-black: #111111;
+  --color-taxnisi-white: #ffffff;
 
-  background: rgb(0, 0, 0);
-  -webkit-font-smoothing: antialiased;
-}
+  /* Add this animation */
+  --animate-marquee: marquee 120s linear infinite;
 
-html,
-body,
-#app {
-  height: 100%;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    } /* Move exactly half the width */
+  }
 }
 
 body {
-  font-family: system-ui;
-  font-size: 18px;
-  line-height: 32px;
+  overflow: overlay;
+}
 
-  margin: 0;
-  color: rgb(1000, 1000, 1000);
+html {
+  scrollbar-gutter: stable; /* Reserves space so page doesn't jump */
+  scrollbar-width: thin;
+  scrollbar-color: #555 transparent;
+}
 
-  @media (max-width: 1024px) {
-    font-size: 15px;
-    line-height: 24px;
+/* 2. Webkit Browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px; /* Slightly wider so it's usable */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Totally clear background */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #000000; /* Grey thumb */
+  border-radius: 9999px; /* Pill shape */
+  border: 3px solid transparent; /* This creates the "padding" effect */
+  background-clip: content-box; /* Ensures the border creates space around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #000000; /* Black on hover */
+  border: 3px solid transparent;
+}
+
+/* 3. Firefox Support */
+@supports (scrollbar-color: auto) {
+  html {
+    scrollbar-color: #000000 transparent; /* Thumb, Track */
+    scrollbar-width: thin;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent; /* Totally clear background */
   }
 }
 
-img {
-  max-width: 100%;
+/* Hide scrollbar for Chrome/Safari/Opera 
+   (Optional: Clean look for Lenis scrolling)
+*/
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+html.lenis,
+html.lenis body {
   height: auto;
-  display: block;
 }
 
-h1 {
-  margin: 40px 0;
-  font-size: 64px;
-  line-height: 70px;
-  font-weight: bold;
-
-  @media (max-width: 1024px) {
-    margin: 24px 0;
-    font-size: 42px;
-    line-height: 42px;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 38px;
-    line-height: 38px;
-  }
-
-  @media (max-width: 400px) {
-    font-size: 32px;
-    line-height: 32px;
-  }
-}
-
-p {
-  margin: 24px 0;
-
-  @media (max-width: 1024px) {
-    margin: calc(var(--base) * 0.75) 0;
-  }
-}
-
-a {
-  color: currentColor;
-
-  &:focus {
-    opacity: 0.8;
-    outline: none;
-  }
-
-  &:active {
-    opacity: 0.7;
-    outline: none;
-  }
-}
-
-svg {
-  vertical-align: middle;
-}
-
-.home {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  height: 100vh;
-  padding: 45px;
-  max-width: 1024px;
-  margin: 0 auto;
-  overflow: hidden;
-
-  @media (max-width: 400px) {
-    padding: 24px;
-  }
-
-  .content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-
-    h1 {
-      text-align: center;
-    }
-  }
-
-  .links {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    a {
-      text-decoration: none;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-    }
-
-    .admin {
-      color: rgb(0, 0, 0);
-      background: rgb(1000, 1000, 1000);
-      border: 1px solid rgb(0, 0, 0);
-    }
-
-    .docs {
-      color: rgb(1000, 1000, 1000);
-      background: rgb(0, 0, 0);
-      border: 1px solid rgb(1000, 1000, 1000);
-    }
-  }
-
-  .footer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    @media (max-width: 1024px) {
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    .codeLink {
-      text-decoration: none;
-      padding: 0 0.5rem;
-      background: rgb(60, 60, 60);
-      border-radius: 4px;
-    }
-  }
+.stroke-black {
+  -webkit-text-stroke: 1px black;
 }

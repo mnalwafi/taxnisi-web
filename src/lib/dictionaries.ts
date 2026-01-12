@@ -96,6 +96,11 @@ export const dictionary = {
       written_by: 'Written by',
       back_blog: 'Back to Insights',
     },
+    services_page: {
+      title: 'Expertise.',
+      subtitle: 'Comprehensive financial solutions for the modern enterprise.',
+      empty: 'No services found.',
+    },
   },
   id: {
     navbar: {
@@ -192,6 +197,11 @@ export const dictionary = {
       published_on: 'Diterbitkan pada',
       written_by: 'Ditulis oleh',
       back_blog: 'Kembali ke Wawasan',
+    },
+    services_page: {
+      title: 'Keahlian.',
+      subtitle: 'Solusi keuangan komprehensif untuk perusahaan modern.',
+      empty: 'Layanan tidak ditemukan.',
     },
   },
 }

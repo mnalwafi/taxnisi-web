@@ -5,6 +5,23 @@ export const Media: CollectionConfig = {
   access: {
     read: () => true,
   },
+  upload: {
+    staticDir: 'media',
+    adminThumbnail: 'thumbnail',
+    mimeTypes: ['image/*'],
+  },
+  hooks: {
+    beforeChange: [
+      ({ data }) => {
+        const LIMIT = 2 * 1024 * 1024
+
+        if (data.filesize && data.filesize > LIMIT) {
+          throw new Error('File is too large! Maximum size is 2MB.')
+        }
+        return data
+      },
+    ],
+  },
   fields: [
     {
       name: 'alt',
@@ -12,5 +29,4 @@ export const Media: CollectionConfig = {
       required: true,
     },
   ],
-  upload: true,
 }

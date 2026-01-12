@@ -74,6 +74,7 @@ export interface Config {
     messages: Message;
     team: Team;
     services: Service;
+    posts: Post;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +89,7 @@ export interface Config {
     messages: MessagesSelect<false> | MessagesSelect<true>;
     team: TeamSelect<false> | TeamSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -180,14 +182,14 @@ export interface Media {
 export interface CaseStudy {
   id: number;
   title: string;
-  sector: string;
-  /**
-   * URL identifier (e.g. "project-alpha")
-   */
   slug: string;
-  result: string;
   coverImage: number | Media;
-  challenge?: {
+  sector: 'Technology' | 'Finance' | 'Legal' | 'Retail' | 'Healthcare';
+  client: string;
+  date: string;
+  url?: string | null;
+  result: string;
+  content: {
     root: {
       type: string;
       children: {
@@ -201,22 +203,7 @@ export interface CaseStudy {
       version: number;
     };
     [k: string]: unknown;
-  } | null;
-  solution?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -278,6 +265,37 @@ export interface Service {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts".
+ */
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  coverImage: number | Media;
+  category: 'Tax Updates' | 'Regulatory' | 'Business Strategy' | 'Company News' | 'Insight';
+  author: number | Team;
+  publishedDate: string;
+  excerpt: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -327,6 +345,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'services';
         value: number | Service;
+      } | null)
+    | ({
+        relationTo: 'posts';
+        value: number | Post;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -416,12 +438,14 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CaseStudiesSelect<T extends boolean = true> {
   title?: T;
-  sector?: T;
   slug?: T;
-  result?: T;
   coverImage?: T;
-  challenge?: T;
-  solution?: T;
+  sector?: T;
+  client?: T;
+  date?: T;
+  url?: T;
+  result?: T;
+  content?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -472,6 +496,22 @@ export interface ServicesSelect<T extends boolean = true> {
         item?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "posts_select".
+ */
+export interface PostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  coverImage?: T;
+  category?: T;
+  author?: T;
+  publishedDate?: T;
+  excerpt?: T;
+  content?: T;
   updatedAt?: T;
   createdAt?: T;
 }

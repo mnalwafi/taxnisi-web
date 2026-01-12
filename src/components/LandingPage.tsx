@@ -9,6 +9,7 @@ import Image from 'next/image'
 import type { CaseStudy, Client, Media, Service, Statistic } from '@/payload-types'
 import ProjectCard from './ProjectCard'
 import Link from 'next/link'
+import { useLanguage } from '@/context/LanguageContext'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -20,9 +21,10 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ clients, stats, projects, services }: LandingPageProps) {
-  const [lang, setLang] = useState<'en' | 'id'>('en')
-  const content = dictionary[lang]
+  const { content } = useLanguage()
   const containerRef = useRef(null)
+  const workSectionRef = useRef<HTMLDivElement>(null)
+  const workSliderRef = useRef<HTMLDivElement>(null)
 
   // Infinite Marquee Logic
   const marqueeList = useMemo(() => {
@@ -54,7 +56,41 @@ export default function LandingPage({ clients, stats, projects, services }: Land
       )
     }, containerRef)
     return () => ctx.revert()
-  }, [lang])
+  }, [])
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // We use ScrollTrigger.matchMedia to only run this on Desktop
+      ScrollTrigger.matchMedia({
+        // Desktop (min-width: 768px)
+        '(min-width: 768px)': function () {
+          const slider = workSliderRef.current
+          const section = workSectionRef.current
+          if (!slider || !section) return
+
+          // Calculate how far to move left
+          // (Total Width of Strip) - (Window Width)
+          const totalWidth = slider.scrollWidth
+          const windowWidth = window.innerWidth
+          const amountToScroll = -(totalWidth - windowWidth + 100) // +100 for end padding
+
+          gsap.to(slider, {
+            x: amountToScroll,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              pin: true, // Pin the section in place
+              scrub: 1, // Link animation to scroll bar
+              start: 'top top',
+              end: () => '+=50%',
+              invalidateOnRefresh: true, // Recalculate on resize
+            },
+          })
+        },
+      })
+    }, containerRef) // Scope to main container
+    return () => ctx.revert()
+  }, [])
 
   const getLogoUrl = (client: Client) => {
     const logo = client.logo as Media
@@ -84,7 +120,7 @@ export default function LandingPage({ clients, stats, projects, services }: Land
           <div className="mt-8 md:mt-0 flex gap-12 text-sm uppercase tracking-wider opacity-60 font-medium">
             <div>
               <p className="font-bold text-black">{content.hero.location_label}</p>
-              <p>Jakarta, ID</p>
+              <p>Yogyakarta, ID</p>
             </div>
             <div>
               <p className="font-bold text-black">{content.hero.est_label}</p>
@@ -149,27 +185,52 @@ export default function LandingPage({ clients, stats, projects, services }: Land
         </div>
       </section>
 
-      {/* SELECTED WORKS (STICKY STACK) */}
-      <section className="relative w-full bg-[#f4f4f4] text-black py-20 md:py-32">
-        <div className="px-4 md:px-10 mb-20 max-w-7xl mx-auto">
-          <p className="text-sm uppercase tracking-widest opacity-50 font-bold mb-4">
-            {content.works.label} {/* <--- Translated Label */}
-          </p>
-          <h2 className="font-serif text-6xl md:text-8xl">
-            {content.works.title} {/* <--- Translated Title */}
-          </h2>
-        </div>
+      {/* SELECTED WORKS (GSAP HORIZONTAL) */}
+      <section ref={workSectionRef} className="bg-[#f4f4f4] text-black overflow-hidden">
+        {/* We use h-screen to ensure the pinned section fills the view */}
+        <div className="h-screen flex flex-col justify-center">
+          {/* Header */}
+          <div className="px-4 md:px-10 mb-8 max-w-7xl w-full mx-auto">
+            <p className="text-sm uppercase tracking-widest opacity-50 font-bold mb-4">
+              {content.works.label}
+            </p>
+            <h2 className="font-serif text-5xl md:text-7xl">{content.works.title}</h2>
+          </div>
 
-        <div className="relative w-full">
-          {projects.map((project, i) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={i}
-              total={projects.length}
-              labels={content.project} // <--- Pass the translated labels here
-            />
-          ))}
+          {/* THE SLIDER CONTAINER */}
+          {/* Mobile: overflow-x-auto (Native Swipe)
+              Desktop: overflow-hidden (GSAP Controls it)
+          */}
+          <div
+            ref={workSliderRef}
+            className="flex gap-4 md:gap-10 px-4 md:px-10 w-full md:w-fit overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar"
+          >
+            {projects.map((project, i) => (
+              <div key={project.id} className="min-w-[85vw] md:min-w-[60vw] snap-center">
+                <ProjectCard
+                  project={project}
+                  index={i}
+                  total={projects.length}
+                  labels={content.project}
+                />
+              </div>
+            ))}
+
+            {/* 'View All' Link */}
+            <div className="min-w-[40vw] md:min-w-[30vw] flex items-center justify-center snap-center">
+              <Link
+                href="/case-studies"
+                className="group flex flex-col items-center gap-4 opacity-50 hover:opacity-100 transition-opacity"
+              >
+                <div className="w-24 h-24 rounded-full border border-black flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
+                  →
+                </div>
+                <span className="text-xs font-bold uppercase tracking-widest">
+                  View All Projects
+                </span>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -195,16 +256,6 @@ export default function LandingPage({ clients, stats, projects, services }: Land
             </Link>
           ))}
         </div>
-      </section>
-
-      {/* FOOTER */}
-      <section className="h-[80vh] bg-[#111] text-[#f4f4f4] flex flex-col justify-center items-center text-center px-4">
-        <h2 className="font-serif text-[10vw] leading-none mb-8">{content.footer.title}</h2>
-        <Link href="/contact">
-          <MagneticButton className="bg-white text-black px-12 py-4 rounded-full text-xl hover:scale-105 transition-transform">
-            {content.footer.button}
-          </MagneticButton>
-        </Link>
       </section>
     </main>
   )

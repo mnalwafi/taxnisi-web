@@ -1,11 +1,11 @@
 'use client'
 
-import React, { useActionState, useState } from 'react' // Import useState
+import React, { useActionState } from 'react' // Import useState
 import { submitContact } from '@/actions/submitContact'
 import FloatingInput from '@/components/ui/FloatingInput'
 import MagneticButton from '@/components/ui/MagneticButton'
 import Link from 'next/link'
-import { dictionary } from '@/lib/dictionaries' // Import dictionary
+import { useLanguage } from '@/context/LanguageContext'
 
 const initialState = {
   success: false,
@@ -16,8 +16,7 @@ export default function ContactPage() {
   const [state, formAction, isPending] = useActionState(submitContact, initialState)
 
   // 1. Add Language State
-  const [lang, setLang] = useState<'en' | 'id'>('en')
-  const content = dictionary[lang]
+  const { content } = useLanguage()
 
   return (
     <main className="w-full min-h-screen bg-[#f4f4f4] text-black">

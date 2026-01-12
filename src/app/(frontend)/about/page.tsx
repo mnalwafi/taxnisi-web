@@ -4,6 +4,11 @@ import AboutClient from './AboutClient'
 
 export const dynamic = 'force-dynamic'
 
+export const metadata = {
+  title: 'About The Firm',
+  description: 'Meet the partners and tax strategists behind Taxnisi.',
+}
+
 export default async function AboutPage() {
   const payload = await getPayload({ config })
 

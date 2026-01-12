@@ -1,12 +1,18 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import ServiceItem from '@/components/ServiceItem'
-import { dictionary } from '@/lib/dictionaries' // For static labels
+import { useLanguage } from '@/context/LanguageContext'
 
 export const dynamic = 'force-dynamic'
 
+export const metadata = {
+  title: 'Services',
+  description: 'We provide many tax services.',
+}
+
 export default async function ServicesPage() {
   const payload = await getPayload({ config })
+  const { content } = useLanguage()
 
   // Fetch Services from DB
   const { docs: services } = await payload.find({

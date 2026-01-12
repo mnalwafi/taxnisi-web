@@ -13,6 +13,9 @@ import { Statistics } from './globals/Statistics'
 import { Messages } from './collections/Messages'
 import { Team } from './collections/Team'
 import { Services } from './collections/Services'
+import { Posts } from './collections/Posts'
+
+import { s3Storage } from '@payloadcms/storage-s3'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -24,7 +27,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, CaseStudies, Clients, Messages, Team, Services],
+  collections: [Users, Media, CaseStudies, Clients, Messages, Team, Services, Posts],
   globals: [Statistics],
   localization: {
     locales: [
@@ -51,5 +54,21 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    s3Storage({
+      collections: {
+        media: true, // Enable for 'media' collection
+      },
+      bucket: process.env.S3_BUCKET_NAME || '',
+      config: {
+        endpoint: process.env.S3_ENDPOINT,
+        region: process.env.S3_REGION,
+        forcePathStyle: true, // Needed for Supabase/MinIO
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+        },
+      },
+    }),
+  ],
 })

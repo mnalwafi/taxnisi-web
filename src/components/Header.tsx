@@ -6,11 +6,11 @@ import { usePathname } from 'next/navigation'
 import gsap from 'gsap'
 import { dictionary } from '@/lib/dictionaries'
 import MagneticButton from '@/components/ui/MagneticButton'
+import { useLanguage } from '@/context/LanguageContext'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
-  const [lang, setLang] = useState<'en' | 'id'>('en') // In a real app, use a Context for this
-  const content = dictionary[lang]
+  const { lang, setLang, content: dict } = useLanguage()
   const pathname = usePathname()
 
   const menuRef = useRef<HTMLDivElement>(null)
@@ -119,11 +119,12 @@ export default function Header() {
       >
         <div ref={linksRef} className="flex flex-col items-center gap-8 text-center">
           {[
-            { label: content.menu.home, href: '/' },
-            { label: content.menu.about, href: '/about' },
-            { label: content.menu.works, href: '/#works' },
-            { label: content.menu.services, href: '/services' },
-            { label: content.menu.contact, href: '/contact' },
+            { label: dict.menu.home, href: '/' },
+            { label: dict.menu.about, href: '/about' },
+            { label: dict.menu.works, href: '/case-studies' },
+            { label: dict.menu.services, href: '/services' },
+            { label: dict.menu.contact, href: '/contact' },
+            { label: dict.menu.blog || 'Insights', href: '/blog' },
           ].map((link, i) => (
             <div key={i}>
               <Link

@@ -18,9 +18,11 @@
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.966.0",
     "@payloadcms/db-postgres": "3.70.0",
     "@payloadcms/next": "3.70.0",
     "@payloadcms/richtext-lexical": "3.70.0",
+    "@payloadcms/storage-s3": "^3.70.0",
     "@payloadcms/ui": "3.70.0",
     "@tailwindcss/postcss": "^4.1.18",
     "clsx": "^2.1.1",
@@ -41,6 +43,7 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
     "@playwright/test": "1.56.1",
     "@testing-library/react": "16.3.0",
     "@types/escape-html": "^1.0.4",

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import MagneticButton from '@/components/ui/MagneticButton'
 import { useLanguage } from '@/context/LanguageContext'
+import Image from 'next/image'
 
 export default function Footer() {
   const { content } = useLanguage() // <--- Hook for translation
@@ -35,11 +36,11 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col justify-between min-h-[60vh]">
         {/* TOP SECTION: CTA */}
         <div>
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-4">
             <h2 className="font-serif text-[12vw] leading-[0.8]">
               {content.footer.title} {/* Translated */}
             </h2>
-            <Link href="/contact" className="mb-4 md:mb-8">
+            <Link href="/contact" className="mb-4 md:mb-8 flex w-full md:w-auto justify-end">
               <MagneticButton className="border border-white/20 bg-white/5 px-10 py-8 rounded-full hover:bg-white hover:text-black transition-all">
                 <span className="text-xl md:text-2xl font-serif italic pr-4">
                   {content.footer.cta} {/* Translated */}
@@ -58,7 +59,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pt-10">
           {/* Column 1: Brand */}
           <div className="flex flex-col justify-between h-full">
-            <span className="font-bold text-2xl tracking-tighter">Taxnisi.</span>
+            <Image
+              src="/taxnisi-logo.svg" // Same file
+              alt="Taxnisi Logo"
+              width={120}
+              height={30}
+              className="object-contain invert brightness-0 rounded-xl" // Forces logo to be pure white
+            />
             <span className="text-white/40 text-sm mt-4">
               {content.footer.location} <br />
               {time} WIB

@@ -4,8 +4,7 @@ import React, { useState, useRef, useLayoutEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import gsap from 'gsap'
-import { dictionary } from '@/lib/dictionaries'
-import MagneticButton from '@/components/ui/MagneticButton'
+import Image from 'next/image'
 import { useLanguage } from '@/context/LanguageContext'
 
 export default function Header() {
@@ -73,7 +72,13 @@ export default function Header() {
       <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-center z-[60] mix-blend-difference text-white">
         {/* Logo */}
         <Link href="/" className="font-bold tracking-widest text-sm uppercase">
-          Taxnisi
+          <Image
+            src="/taxnisi-logo.png" // <--- Change to your filename
+            alt="Taxnisi Logo"
+            width={150} // Intrinsic width of the image file
+            height={40} // Intrinsic height of the image file
+            priority
+          />
         </Link>
 
         <div className="flex items-center gap-6">

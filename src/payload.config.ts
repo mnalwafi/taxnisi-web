@@ -26,6 +26,31 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      titleSuffix: '- Taxnisi Admin',
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          url: '/favicon.ico',
+        },
+      ],
+      openGraph: {
+        images: ['/opengraph-image.png'],
+      },
+    },
+    components: {
+      graphics: {
+        Logo: {
+          path: './components/AdminLogo.tsx',
+          exportName: 'AdminLogo',
+        },
+        Icon: {
+          path: './components/AdminIcon.tsx',
+          exportName: 'AdminIcon',
+        },
+      },
+    },
   },
   collections: [Users, Media, CaseStudies, Clients, Messages, Team, Services, Posts],
   globals: [Statistics],

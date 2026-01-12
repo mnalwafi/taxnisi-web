@@ -103,7 +103,7 @@ export default function LandingPage({ clients, stats, projects, services }: Land
       <section className="relative min-h-screen flex flex-col justify-end pb-20 px-4 md:px-10 pt-32">
         <div className="w-full mb-10">
           {content.hero.title_words.map((word, i) => (
-            <div key={i} className="overflow-hidden">
+            <div key={i}>
               <h1 className="char-reveal font-serif text-[13vw] md:text-[15vw] leading-[0.85] uppercase tracking-tighter pb-2">
                 {word}
               </h1>
@@ -124,7 +124,7 @@ export default function LandingPage({ clients, stats, projects, services }: Land
             </div>
             <div>
               <p className="font-bold text-black">{content.hero.est_label}</p>
-              <p>2026</p>
+              <p>2019</p>
             </div>
           </div>
         </div>

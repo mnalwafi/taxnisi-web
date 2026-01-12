@@ -11,8 +11,6 @@ export default function Footer() {
   const pathname = usePathname()
   const [time, setTime] = useState('')
 
-  if (pathname === '/contact') return null
-
   useEffect(() => {
     const updateTime = () => {
       const now = new Date()
@@ -29,6 +27,8 @@ export default function Footer() {
     const interval = setInterval(updateTime, 1000)
     return () => clearInterval(interval)
   }, [])
+
+  if (pathname === '/contact') return null
 
   return (
     <footer className="bg-[#111] text-white pt-32 pb-10 px-4 md:px-10 rounded-t-3xl mt-[-20px] relative z-10">

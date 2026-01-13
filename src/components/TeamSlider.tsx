@@ -14,43 +14,51 @@ export default function TeamSlider({ team, label }: { team: Team[]; label: strin
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Calculate how far to move: (Total Width of Slides - Viewport Width)
-      const totalWidth = sliderRef.current?.scrollWidth || 0
-      const viewportWidth = window.innerWidth
-      const xMove = -(totalWidth - viewportWidth + 100) // +100 for padding
+      // We use matchMedia so GSAP ONLY runs on Desktop (min-width: 768px)
+      ScrollTrigger.matchMedia({
+        '(min-width: 768px)': function () {
+          const totalWidth = sliderRef.current?.scrollWidth || 0
+          const viewportWidth = window.innerWidth
+          const xMove = -(totalWidth - viewportWidth + 10)
 
-      if (window.innerWidth > 768) {
-        // Only enable on Desktop
-        gsap.to(sliderRef.current, {
-          x: xMove,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: containerRef.current,
-            pin: true, // PIN THE PAGE
-            scrub: 1, // SMOOTH SCROLL LINK
-            start: 'top top',
-            end: '+=50%', // The scroll distance (longer = slower slide)
-          },
-        })
-      }
+          gsap.to(sliderRef.current, {
+            x: xMove,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: containerRef.current,
+              pin: true,
+              scrub: 1,
+              start: 'top top',
+              end: '+=50%', // Increased slightly for smoother desktop feel
+              invalidateOnRefresh: true,
+            },
+          })
+        },
+      })
     }, containerRef)
     return () => ctx.revert()
   }, [team])
 
   return (
-    // This container gets PINNED
     <div
       ref={containerRef}
-      className="h-screen w-full bg-[#111] text-white flex flex-col justify-center overflow-hidden"
+      // CHANGED: On mobile, we remove 'h-screen' and 'overflow-hidden' so it flows naturally
+      className="min-h-screen w-full bg-[#111] text-white flex flex-col justify-center py-20 md:py-0 md:h-screen md:overflow-hidden relative"
     >
-      <div className="px-10 mb-10 md:absolute md:top-10 md:left-0 w-full z-10">
+      <div className="px-4 md:px-10 mb-10 md:absolute md:top-10 md:left-0 w-full z-10">
         <p className="text-sm uppercase tracking-widest opacity-50 font-bold">{label}</p>
       </div>
 
       {/* The Sliding Strip */}
-      <div ref={sliderRef} className="flex gap-10 px-10 md:gap-20 md:px-20 w-fit">
+      <div
+        ref={sliderRef}
+        // CHANGED: Added mobile scroll classes (overflow-x-auto, snap-x)
+        // and reset them on desktop (md:overflow-visible)
+        className="flex gap-4 px-4 w-full overflow-x-auto snap-x snap-mandatory no-scrollbar md:gap-20 md:px-20 md:w-fit md:overflow-visible"
+      >
         {team.map((member, i) => (
-          <div key={i} className="group relative w-[300px] md:w-[400px] flex-shrink-0">
+          // CHANGED: Added min-w-[85vw] for mobile sizing
+          <div key={i} className="group relative w-[85vw] md:w-[400px] flex-shrink-0 snap-center">
             {/* Image Card */}
             <div className="relative h-[400px] md:h-[500px] w-full overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 mb-8">
               <Image
@@ -60,6 +68,7 @@ export default function TeamSlider({ team, label }: { team: Team[]; label: strin
                 className="object-cover group-hover:scale-110 transition-transform duration-700"
               />
             </div>
+
             {/* Text */}
             <h3 className="font-serif text-3xl md:text-4xl">{member.name}</h3>
             <p className="text-sm uppercase tracking-widest opacity-50 mt-2">{member.role}</p>

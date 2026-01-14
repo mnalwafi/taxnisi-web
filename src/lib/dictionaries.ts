@@ -101,6 +101,13 @@ export const dictionary = {
       subtitle: 'Comprehensive financial solutions for the modern enterprise.',
       empty: 'No services found.',
     },
+    not_found: {
+      code: '404',
+      title: 'Asset Not Found.',
+      description:
+        'The page you are looking for has been audited and removed, or never existed in our ledger.',
+      button: 'Return to Base',
+    },
   },
   id: {
     navbar: {
@@ -202,6 +209,13 @@ export const dictionary = {
       title: 'Keahlian.',
       subtitle: 'Solusi keuangan komprehensif untuk perusahaan modern.',
       empty: 'Layanan tidak ditemukan.',
+    },
+    not_found: {
+      code: '404',
+      title: 'Aset Tidak Ditemukan.',
+      description:
+        'Halaman yang Anda cari telah diaudit dan dihapus, atau tidak pernah ada dalam buku besar kami.',
+      button: 'Kembali ke Beranda',
     },
   },
 }
